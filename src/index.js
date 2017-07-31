@@ -19,6 +19,7 @@ ReactDOM.render((
         <Route path="/" name="Home" component={Full}/>
         <Route path="/ingestionform" name="Home" component={Full}/>
         <Route path="/ontologies" name="Home" component={Full}/>
+        <Route path="/dataset" name="Dataset" component={Full} />
       </Switch>
     </HashRouter>
   </Provider>

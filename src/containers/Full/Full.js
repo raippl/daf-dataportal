@@ -8,6 +8,7 @@ import Footer from '../../components/Footer/';
 import IngestionWizard from '../../views/IngestionWizard/';
 import Ontologies from '../../views/Ontologies/'
 import Dashboard from '../../views/Dashboard/'
+import Dataset from '../../views/Dataset/'
 
 class Full extends Component {
   render() {
@@ -23,6 +24,7 @@ class Full extends Component {
                 <Route path="/dashboard" name="Dashboard" component={Dashboard}/>
                 <Route path="/ingestionwizzard" name="Forms" component={IngestionWizard} />
                 <Route path="/ontologies" name="Ontologies" component={Ontologies} />
+                <Route path="/dataset" name="Dataset" component={Dataset} />
                 <Redirect from="/" to="/dashboard"/>
               </Switch>
             </div>
