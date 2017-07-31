@@ -12,9 +12,10 @@ import Dataset from '../../views/Dataset/'
 
 class Full extends Component {
   render() {
+    const { history } = this.props
     return (
       <div className="app">
-        <Header />
+        <Header history={history}/>
         <div className="app-body">
           <Sidebar {...this.props}/>
           <main className="main">

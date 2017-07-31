@@ -79,7 +79,7 @@ class Header extends Component {
     event.preventDefault();
     const { dispatch, selectDataset } = this.props;
     dispatch(loadDatasets(this.state.value));
-    history.push('/#/dataset')
+    this.props.history.push('/dataset');
   }
 
   render() {
