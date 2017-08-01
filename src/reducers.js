@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import { reducer as reduxFormReducer } from 'redux-form';
 import {
   REQUEST_DATASETS,
   RECEIVE_DATASETS,
@@ -65,6 +66,7 @@ function datasetReducer(state = {}, action) {
 //will mount each reducer with the corresponding key (datasetReducer)
 //but you can change it by naming the key differently (form: reduxFormReducer)
 const rootReducer = combineReducers({
+  form: reduxFormReducer,
   datasetReducer
 })
 

@@ -17,10 +17,14 @@ ReactDOM.render((
     <HashRouter history={history}>
       <Switch>
         <Route path="/" name="Home" component={Full}/>
-        <Route path="/ingestionform" name="Home" component={Full}/>
-        <Route path="/ontologies" name="Home" component={Full}/>
-        <Route path="/dataset" name="Dataset" component={<Full history={history} />}/>
+        <Route path="/ingestionwizzard" name="Forms" component={Full}/>
+        <Route path="/ontologies" name="Ontologies" component={Full}/>
+        <Route path="/dash" name="Dash" component={Full}/>
+       
       </Switch>
     </HashRouter>
   </Provider>
 ), document.getElementById('root'))
+
+
+// <Route path="/dataset" name="Dataset" component={<Full history={history} />}/>

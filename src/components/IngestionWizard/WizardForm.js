@@ -40,6 +40,8 @@ class WizardForm extends Component {
   //  console.log('ale')
   //}
 
+              //    {page === 1 && <WizardFormFirstPage onSubmit={this.nextPage} />}
+// previousPage={this.previousPage}
   render() {
     const { onSubmit } = this.props
     const { page } = this.state
@@ -51,15 +53,15 @@ class WizardForm extends Component {
                 <strong>Basic Form</strong> Elements
               </div>
               <div className="card-block">
-                {page === 1 && <WizardFormFirstPage onSubmit={this.nextPage} />}
-                {page === 2 &&
-                <WizardFormMetadata previousPage={this.previousPage}
+
+                {page === 1 &&
+                <WizardFormMetadata
                       onSubmit={this.nextPage}
                 //  <WizardFormSecondPage
                 //      previousPage={this.previousPage}
                 //      onSubmit={this.nextPage2}
                   />}
-                {page === 3 &&
+                {page === 2 &&
                     <WizardFormThirdPage
                       previousPage={this.previousPage}
                       onSubmit={onSubmit}

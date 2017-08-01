@@ -15,15 +15,19 @@ const themes = [
 
 
 const renderThemes = ({ input, meta: { touched, error } }) => (
-  <div>
-    <select {...input}>
-      <option value="ECON"  key='theme'>ECONOMIA</option>
-      {themes.map(value => <option value={value.val} key={value.val}>{value.name}</option>)}
-    </select>
-    {touched && error && <span>{error}</span>}
-  </div>
+    <div className="form-group row">
+      <label className="col-md-3 form-control-label">Categoria</label>
+      <div className="col-md-9">
+      <select {...input}>
+        <option value="ECON"  key='theme'>ECONOMIA</option>
+        {themes.map(value => <option value={value.val} key={value.val}>{value.name}</option>)}
+        </select>
+        {touched && error && <span>{error}</span>}
+      </div>
+   </div>
 );
 
+ 
 
 const WizardFormFirstPage = props => {
   const { handleSubmit } = props

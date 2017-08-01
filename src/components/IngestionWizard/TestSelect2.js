@@ -5,8 +5,43 @@ import Select from 'react-select';
 import fetch from 'isomorphic-fetch';
 
 
+function escapeRegexCharacters(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function getSuggestions(value, ontologies, filterType) {
+  const escapedValue = escapeRegexCharacters(value.trim());
+  if (escapedValue === '') {
+    return [];
+  }
+
+  const regex = new RegExp('^' + escapedValue, 'i');
+  return ontologiesFilter(ontologies, regex);
+}
+
+function ontologiesFilter(ontologies, regex){
+      var res = [];
+      ontologies.forEach(function(entry) {
+              //console.log('entry: ' + entry['http://www.w3.org/2000/01/rdf-schema#label']);
+              var obj = entry['http://www.w3.org/2000/01/rdf-schema#label'];
+              obj.forEach(function(lang) {
+                //console.log('lang: ' + lang['xml:lang']);
+                if(lang['xml:lang'] == 'it'){
+                  //console.log('lang1: ' + lang['value']);
+                  if(regex.test(lang['value'])){
+                      //console.log('lang2: ' + lang['value']);
+                      entry.name = lang['value'];
+                      res.push(entry);
+                  }
+                }
+              })
+            });
+      return res; 
+}
+
+
 const TestSelect2 = createClass({
-	displayName: 'GithubUsers',
+	displayName: 'Ontologies',
 	propTypes: {
 		label: PropTypes.string,
 	},
@@ -43,7 +78,51 @@ const TestSelect2 = createClass({
 		.then((json) => {
 			return { options: json.items };
 		});
-	},
+    },
+   loadOntologies(input) {
+    if (!input) {
+		return Promise.resolve({ options: [] });
+	}
+    console.log('loadOntologies - newValue: ' + input);    
+    var that = this;
+    var url = 'http://stlab.istc.cnr.it/ontonethub/api/find';
+
+   // if(process.env.NODE_ENV=='development'){
+   //   that.setState({ ontologies: ontologiesFile });
+   //   }else {
+        var details = {
+            'name': input + '*',
+            'lang': 'it'
+        };
+        var formBody = [];
+        for (var property in details) {
+          var encodedKey = encodeURIComponent(property);
+          var encodedValue = encodeURIComponent(details[property]);
+          formBody.push(encodedKey + "=" + encodedValue);
+        }
+        formBody = formBody.join("&");
+
+        return fetch(url, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: formBody
+        })
+        .then(function(response) {
+          if (response.status >= 400) {
+            throw new Error("Bad response from server");
+          }
+          return response.json();
+        })
+        .then(function(data) {
+          var test = getSuggestions(input, data.results)
+            .map((item, index) =>( {'id': 'c_' + index, 'login' : item.name }))
+          return { options: test };
+        });
+ //   }
+  },
 	gotoUser (value, event) {
 		window.open(value.html_url);
 	},
@@ -63,6 +142,9 @@ const TestSelect2 = createClass({
 			: Select.Async;
 
 		return (
+              <div className="form-group row">
+    <label className="col-md-3 form-control-label">Concetto Semantico</label>
+   <div className="col-md-9">
                 <AsyncComponent multi={this.state.multi} 
                 value={this.state.value} 
                 onChange={this.onChange} 
@@ -70,9 +152,11 @@ const TestSelect2 = createClass({
                 onBlur = {() => this.props.input.onBlur(this.state.value) } 
                 valueKey="id" 
                 labelKey="login" 
-                loadOptions={this.getUsers} 
+               // loadOptions={this.getUsers} 
+                loadOptions={this.loadOntologies}
                 backspaceRemoves={this.state.backspaceRemoves} />
-
+                </div>
+                </div>
 		);
 	}
 });

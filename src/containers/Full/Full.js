@@ -6,9 +6,10 @@ import Breadcrumb from '../../components/Breadcrumb/';
 import Aside from '../../components/Aside/';
 import Footer from '../../components/Footer/';
 import IngestionWizard from '../../views/IngestionWizard/';
-import Ontologies from '../../views/Ontologies/'
-import Dashboard from '../../views/Dashboard/'
-import Dataset from '../../views/Dataset/'
+import Ontologies from '../../views/Ontologies/';
+import Dashboard from '../../views/Dashboard/';
+import Dataset from '../../views/Dataset/';
+import UserStory from '../../views/UserStory/';
 
 class Full extends Component {
   render() {
@@ -25,6 +26,7 @@ class Full extends Component {
                 <Route path="/dashboard" name="Dashboard" component={Dashboard}/>
                 <Route path="/ingestionwizzard" name="Forms" component={IngestionWizard} />
                 <Route path="/ontologies" name="Ontologies" component={Ontologies} />
+                <Route path="/dash" name="Dash" component={UserStory} />
                 <Route path="/dataset" name="Dataset" component={Dataset} />
                 <Redirect from="/" to="/dashboard"/>
               </Switch>

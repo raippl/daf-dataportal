@@ -3,7 +3,8 @@ import { Field, reduxForm } from 'redux-form';
 import validate from './validate';
 import renderField from './renderField';
 import WizardDataSchema from './WizardDataSchema.js'
-import DataInputForm from './data_form.js'
+import NewDsForm from '../../components/IngestionForm/'
+import DataInputForm from '../../components/IngestionForm/data_form.js'
 
 
 const data_dcatap = DataInputForm.getDcatap()
