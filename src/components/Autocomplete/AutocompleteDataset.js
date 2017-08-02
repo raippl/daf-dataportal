@@ -88,7 +88,7 @@ class AutocompleteDataset extends Component {
   render() {
     const { value, suggestions } = this.state;
     const inputProps = {
-      placeholder: "Inserisci criteri di ricerca",
+      placeholder: "Inserisci criteri",
       value,
       onChange: this.onChange
     };

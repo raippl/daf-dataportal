@@ -2,12 +2,17 @@ import fetch from 'isomorphic-fetch'
 import page from './data/dataset'
 import det from './data/datasetdetail'
 import { serviceurl } from './config/serviceurl.js'
+import { login } from './helpers/auth'
+
 export const REQUEST_DATASETS = 'REQUEST_DATASETS'
 export const RECEIVE_DATASETS = 'RECEIVE_DATASETS'
 export const DELETE_DATASETS = 'DELETE_DATASETS'
 export const SELECT_DATASET = 'SELECT_DATASET'
 export const REQUEST_DATASET_DETAIL = 'REQUEST_DATASET_DETAIL'
 export const RECEIVE_DATASET_DETAIL = 'RECEIVE_DATASET_DETAIL'
+export const REQUEST_LOGIN = 'REQUEST_LOGIN'
+export const RECEIVE_LOGIN = 'RECEIVE_LOGIN'
+
 
 function requestDatasets() {
   return {
@@ -18,6 +23,12 @@ function requestDatasets() {
 function requestDatasetDetail(selectDataset) {
   return {
     type: REQUEST_DATASET_DETAIL
+  }
+}
+
+function requestLogin() {
+  return {
+    type: REQUEST_LOGIN
   }
 }
 
@@ -60,6 +71,19 @@ function receiveDatasetDetail(json) {
       dataset: json,
       receivedAt: Date.now(),
       ope: 'RECEIVE_DATASET_DETAIL'
+  }
+}
+
+
+function receiveLogin(response) {
+  console.log('receiveLogin');
+  console.log(response);
+  
+  return {
+      type: RECEIVE_LOGIN,
+      user: response,
+      receivedAt: Date.now(),
+      ope: 'RECEIVE_LOGIN'
   }
 }
 
@@ -132,3 +156,11 @@ export function datasetDetail(datasetname) {
   }
 }
 
+export function loginAction(email, pw) {
+  console.log("Called action loginAction");
+    return dispatch => {
+      dispatch(requestLogin())
+      return login(email, pw)
+        .then(response => dispatch(receiveLogin(response)))
+    }
+}
