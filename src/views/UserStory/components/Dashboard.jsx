@@ -18,10 +18,10 @@ import IframeWid from './widgets/Iframe';
 //import 'bootstrap/dist/css/bootstrap.css';
 
 // Default styes of dazzle.
-//import 'react-dazzle/lib/style/style.css';
+import 'react-dazzle/lib/style/style.css';
 
 // Our styles
-//import '../styles/custom.css';
+import '../styles/custom.css';
 
 
 const IframeContainer = (url) => 

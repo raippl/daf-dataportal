@@ -1,11 +1,10 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Field, FieldArray, reduxForm, formValueSelector,  change  } from 'redux-form'
 import validate from './validate'
 import {processInputFileMetadata} from './avroschema.js'
 import Dropzone from 'react-dropzone'
 import TestSelect2 from './TestSelect2';
 import { connect } from 'react-redux';
-
 
 
 const calcDataFields = (fields, files) =>
@@ -21,102 +20,6 @@ const calcDataFields = (fields, files) =>
         )
      })
 
-
-
- const renderDropzoneInput = ({fields, input, meta : {touched, error} }) => 
-    <div>
-      <div className="form-group">
-        <Dropzone
-          name="input"
-          multiple={false}
-          maxSize={52428800}
-          onDrop={( filesToUpload, e ) => {
-            calcDataFields(fields, filesToUpload);
-            //dispatch(change('wizard', 'title', 'title'))
-            }
-          }>
-          <div>Try dropping some files here, or click to select files to upload.</div>
-        </Dropzone>
-      </div>
-      {touched &&
-        error &&
-        <span>
-          {error}
-        </span>}       
-
-      {fields.map((test, index) => 
-      (index != 0) &&
- 
-      <div className="form-group">
-      <div className="card">
-        <div className="card-header">
-          <strong>Colonna #{index}</strong>
-        </div>
-        <div className="card-block">
-        <Field
-          name={`${test}.nome`}
-          type="text"
-          component={renderField}
-          label="Nome Campo"
-          value={`${test}.nome`}
-        />
-        <Field
-          name={`${test}.tipo`}
-          type="text"
-          component={renderField}
-          label="Tipo"
-          value={`${test}.tipo`}
-        />
-        <Field
-          name={`${test}.concetto`}
-          type="text"
-          component={TestSelect2}
-          label="Concetto"
-          value={`${test}.concetto`}
-        />
-        <hr class="my-4"/>
-        <h6>
-        Metadata  Colonna #{index}
-        </h6>
-
-        <Field
-          name={`${test}.desc`}
-          type="text"
-          component={renderFieldMeta}
-          label="Descrizione"
-          value={`${test}.desc`}
-        />
-        <Field
-          name={`${test}.required`}
-          type="text"
-          component={renderYesNoSelector}
-          label="Obbligatorio"
-          value={`${test}.required`}
-        />
-        <Field
-          name={`${test}.field_type`}
-          type="text"
-          component={renderFieldType}
-          label="Tipo Colonna"
-          value={`${test}.field_type`}
-        />
-        <Field
-          name={`${test}.cat`}
-          type="text"
-          component={renderFieldMeta}
-          label="Categoria"
-          value={`${test}.cat`}
-        />
-        <div className="col-md-9 offset-md-9">
-          <button type="button" onClick={() => fields.remove(index)} className="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
-            Rimuovi
-          </button>
-        </div>
-      </div>
-      </div>
-      </div>
-    )}
-    </div>
      
 //  var metadata = { "desc": "", "required": 0, "field_type": "","cat": "","tag": "","constr": [{"`type`": "","param": ""}],"semantics": {"id": "","context": ""}}
 const themes = [
@@ -328,60 +231,186 @@ const addMetadataFromFile = ({ fields, meta: { error, submitFailed } }) =>
       />
   */
 
-let WizardFormMetadata = props => {
-  const { handleSubmit, previousPage, pristine, submitting, reset, title } = props;
-  return (
+//let WizardFormMetadata = props => {
+
+class WizardFormMetadata extends Component {
+  constructor(props) {
+    super(props)
+  }
+
+  renderDropzoneInput = ({fields, input, meta : {touched, error} }) => 
+      <div>     
+      {fields.length == 0 &&
+      <div className="form-group">
+         <div className="col-md-6 offset-md-3">
+          <label htmlFor='tests'>Carica il file max 50MB</label>
+          <Dropzone
+            name="input"
+            multiple={false}
+            maxSize={52428800}
+            onDrop={( filesToUpload, e ) => {
+              const {dispatch} = this.props 
+              calcDataFields(fields, filesToUpload);
+              dispatch(change('wizard', 'title', filesToUpload[0].name))
+              }
+            }>
+            <div>Try dropping some files here, or click to select files to upload.</div>
+          </Dropzone>
+        </div>
+      </div>
+      }
+      {touched &&
+        error &&
+        <span>
+          {error}
+        </span>}       
+
+      {fields.map((test, index) => 
+      (index == 0) ?
+        <div className="form-group">
+          <Field
+            name={`${test}.tipo.name`}
+            type="text"
+            component={renderField}
+            label="Nome File"
+            value={`${test}.tipo.name`}
+          />
+        </div>
+      :
+      <div className="form-group">
+      <div className="card">
+        <div className="card-header">
+          <strong>Colonna #{index}</strong>
+        </div>
+        <div className="card-block">
+        <Field
+          name={`${test}.nome`}
+          type="text"
+          component={renderField}
+          label="Nome Campo"
+          value={`${test}.nome`}
+        />
+        <Field
+          name={`${test}.tipo`}
+          type="text"
+          component={renderField}
+          label="Tipo"
+          value={`${test}.tipo`}
+        />
+        <Field
+          name={`${test}.concetto`}
+          type="text"
+          component={TestSelect2}
+          label="Concetto"
+          value={`${test}.concetto`}
+        />
+        <hr className="my-4"/>
+        <h6>
+        Metadata  Colonna #{index}
+        </h6>
+
+        <Field
+          name={`${test}.desc`}
+          type="text"
+          component={renderFieldMeta}
+          label="Descrizione"
+          value={`${test}.desc`}
+        />
+        <Field
+          name={`${test}.required`}
+          type="text"
+          component={renderYesNoSelector}
+          label="Obbligatorio"
+          value={`${test}.required`}
+        />
+        <Field
+          name={`${test}.field_type`}
+          type="text"
+          component={renderFieldType}
+          label="Tipo Colonna"
+          value={`${test}.field_type`}
+        />
+        <Field
+          name={`${test}.cat`}
+          type="text"
+          component={renderFieldMeta}
+          label="Categoria"
+          value={`${test}.cat`}
+        />
+        <div className="col-md-9 offset-md-9">
+          <button type="button" onClick={() => fields.remove(index)} className="btn btn-primary" data-toggle="button" aria-pressed="false" autoComplete="off">
+            Rimuovi
+          </button>
+        </div>
+      </div>
+      </div>
+      </div>
+      )}
+    </div>
+  
+  render() {
+    const { handleSubmit, previousPage, pristine, submitting, reset, title, nomefile } = this.props;
+    return (
     <form onSubmit={handleSubmit}>
+      
       <div className="form-group row">
-      <div className="col-md-6">
-        <label htmlFor='tests'>Carica il file max 50MB</label>
+        <div className="col-md-5">
           <FieldArray
             name="tests"
-            component={renderDropzoneInput}
+            component={this.renderDropzoneInput}
             title={title}
           />
-    </div>
-    <div className="col-md-6">
-      <Field
-        name="title"
-        type="text"
-        component={renderField}
-        label="Title"
-      />
-      <Field
-        name="notes"
-        type="text"
-        component={renderField}
-        label="Description"
-      />
-      <Field
-        name="theme"
-        type="text"
-        component={renderThemes}
-        label="Themes"
-      />
-      <Field
-        name="license_title"
-        type="text"
-        component={renderField}
-        label="License"
-      />
-      </div>
-      <div className="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-        <div className="btn-group mr-2" role="group" aria-label="First group">
-          <button type="button" className="btn btn-primary" onClick={previousPage}>Previous</button>
         </div>
-        <div className="btn-group mr-2" role="group" aria-label="Second group">
-          <button type="submit" className="btn btn-primary">Next</button>
-        </div>
-        <div className="btn-group" role="group" aria-label="Third group">
+        <div className="col-md-2">
           <button type="button" className="btn btn-primary" disabled={pristine || submitting} onClick={reset}>Clear Values</button>
         </div>
+        <div className="col-md-5">
+          <Field
+            name="title"
+            type="text"
+            component={renderField}
+            label="Title"
+          />
+          <Field
+            name="notes"
+            type="text"
+            component={renderField}
+            label="Description"
+          />
+          <Field
+            name="theme"
+            type="text"
+            component={renderThemes}
+            label="Themes"
+          />
+          <Field
+            name="license_title"
+            type="text"
+            component={renderField}
+            label="License"
+          />
+  
+        </div>
       </div>
-   </div>
+      <div className="form-group row">
+            <div className="col-md-11 offset-md-11">
+              <button type="submit" className="btn btn-primary">Next</button>
+            </div>
+      </div>
     </form>
-  )
+    )
+  }
 }
+
+
+
+
+
+
+
+
+
+
 
 /*
      
@@ -409,6 +438,14 @@ let WizardFormMetadata = props => {
 //    title
 //  }
 //})(WizardFormMetadata)
+
+WizardFormMetadata = connect(state => {
+  // can select values individually
+  const nomefile = state.nomefile || 'prova';
+  return {
+    nomefile
+  }
+})(WizardFormMetadata)
 
 
 export default reduxForm({
